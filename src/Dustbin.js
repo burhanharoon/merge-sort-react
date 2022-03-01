@@ -29,14 +29,14 @@ export const Dustbin = memo(function Dustbin({ shouldAccept, accept, lastDropped
     else if (canDrop) {
         backgroundColor = 'darkkhaki';
     }
-    console.log(lastDroppedItem);
+    // console.log(lastDroppedItem);
     return (<div ref={drop} role="Dustbin" style={{ ...style, backgroundColor }}>
         {/* {isActive
             ? 'Release to drop'
             : `This box only accepts: ${shouldAccept}`} */}
 
         {
-            lastDroppedItem && lastDroppedItem?.name == shouldAccept ? `${shouldAccept}` : `Please drop ${shouldAccept} here`}
+            lastDroppedItem && lastDroppedItem?.name == shouldAccept ? `${shouldAccept}` : `Drop ${shouldAccept} here`}
     </div>);
 });
 

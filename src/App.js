@@ -6,7 +6,29 @@ import update from 'immutability-helper';
 import { Box } from './Box';
 import { Container } from './Container';
 
-const numbers = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+
+function getRndInteger(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+const numbers = []
+for (let i = 0; i < 10; i++) {
+  let digit = (getRndInteger(0, 100))
+  numbers.push(digit)
+  // numbers.sort()
+}
+function sort(numbers) {
+  // var ary = [2, 1, 0.4, 2, 0.4, 0.2, 1.5, 1, 1.1, 1.3, 1.2, 0.2, 0.4, 0.9];
+  // use custom compare function that sorts numbers ascending
+  numbers.sort(function (a, b) {
+    return b - a;
+  })
+}
+
+
+sort(numbers)
+
+console.log(numbers);// numbers.reverse()
 let ItemTypes = {}
 numbers.forEach(number => {
   ItemTypes[`Item${number}`] = number;
@@ -41,6 +63,8 @@ function App() {
     { accepts: [ItemTypes[`Item${numbers[1]}`]], lastDroppedItem: null },
   ]);
 
+
+
   const handleDrop = useCallback((index, item) => {
     const { name } = item;
     setDroppedBoxNames(update(droppedBoxNames, name ? { $push: [name] } : { $push: [] }));
@@ -59,14 +83,33 @@ function App() {
   const firstHalf = half / 2
   const secondHalf = numbers.length
 
-  // console.log(half);
+  const [firstShow, setfirstShow] = useState(true)
+  const [secondShow, setsecondShow] = useState(false)
+  const [thirdShow, setthirdShow] = useState(false)
+  const [fourthShow, setfourthShow] = useState(false)
+
+  const [showNumber, setShowNumber] = useState(1)
+  const nextShow = () => {
+    setShowNumber(showNumber + 1)
+    if (firstShow) {
+      setfirstShow(false)
+      setsecondShow(true)
+    } else if (secondShow) {
+      setsecondShow(false)
+      setthirdShow(true)
+    } else {
+      setthirdShow(false)
+      setfourthShow(true)
+    }
+  }
+
 
   return (
 
 
     <div className='flex'>
 
-      <div>
+      <div className='fixed '>
         <DndProvider backend={HTML5Backend}>
           <div className='flex flex-col gap-1 justify-center'>
             {boxes.map(({ name, type }, index) => (<Box name={name} type={type} isDropped={isDropped(name)} key={index} />))}
@@ -115,7 +158,7 @@ function App() {
 
 
         {/* Third Layer */}
-        <div className='flex justify-center w-full gap-8 mb-4'>
+        <div className='flex justify-center w-full gap-12 mb-4'>
           <div className='flex'>
             {numbers.map((number, index) => {
               return (
@@ -153,57 +196,93 @@ function App() {
 
 
         {/* Fourth Layer */}
-        <div className='flex justify-center gap-4 mb-4'>
+        <div className='flex  gap-4 mb-4'>
 
-
-          <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-            {numbers[0]}
-          </div>
-          <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-            {numbers[1]}
-          </div>
-
-
-          <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-            {numbers[2]}
-          </div>
-
-
-          <div className='flex'>
-            <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-              {numbers[3]}
+          <div className='flex items-center  gap-2 flex-col'>
+            <div className='w-50 bg-blue-200 p-2 rounded-xl'>
+              <p>Array has 2 elements {numbers[0]} and {numbers[1]}</p>
+              <p>Half = Length/2 = 1</p>
+              <p>{numbers[0]} and {numbers[1]} are divided into 2 arrays</p>
             </div>
-            <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-              {numbers[4]}
+            <div className='flex gap-4'>
+              <div className='p-8 border-r-0 border-b-2 border-black bg-slate-300   w-20 h-20 '>
+                {numbers[0]}
+              </div>
+              <div className='p-8 border-r-0 border-b-2 border-black bg-slate-300   w-20 h-20 '>
+                {numbers[1]}
+              </div>
             </div>
           </div>
 
 
-
-          <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-            {numbers[5]}
-          </div>
-          <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-            {numbers[6]}
-          </div>
-
-
-
-          <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-            {numbers[7]}
-          </div>
-
-
-          <div className='flex'>
-            <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-              {numbers[8]}
+          <div className='flex items-center  gap-2 flex-col'>
+            <div className='w-50 bg-blue-200 p-2 rounded-xl'>
+              <p>Array has 3 elements {numbers[2]}, {numbers[3]}and {numbers[4]}</p>
+              <p>Half = Length/2 = 1.5</p>
+              <p>{numbers[2]}, {numbers[3]} and {numbers[4]} are divided into 2 arrays</p>
             </div>
-            <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-              {numbers[9]}
+            <div className='flex gap-4'>
+              <div className='p-8 border-r-0 border-b-2 border-black bg-slate-300   w-20 h-20 '>
+                {numbers[2]}
+              </div>
+              <div className='flex border-b-2 border-black'>
+                <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
+                  {numbers[3]}
+                </div>
+                <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
+                  {numbers[4]}
+                </div>
+              </div>
             </div>
           </div>
+
+          <div className='flex items-center  gap-2 flex-col'>
+            <div className='w-50 bg-blue-200 p-2 rounded-xl'>
+              <p>Array has 2 elements {numbers[5]} and {numbers[6]}</p>
+              <p>Half = Length/2 = 1</p>
+              <p>{numbers[5]} and {numbers[6]} are divided into 2 arrays</p>
+            </div>
+            <div className='flex gap-4'>
+              <div className='p-8 border-r-0 border-b-2 border-black bg-slate-300   w-20 h-20 '>
+                {numbers[5]}
+              </div>
+              <div className='p-8 border-r-0 border-b-2 border-black bg-slate-300   w-20 h-20 '>
+                {numbers[6]}
+              </div>
+            </div>
+          </div>
+
+
+          <div className='flex items-center  gap-2 flex-col'>
+            <div className='w-50 bg-blue-200 p-2 rounded-xl'>
+              <p>Array has 3 elements {numbers[7]}, {numbers[8]}and {numbers[9]}</p>
+              <p>Half = Length/2 = 1.5</p>
+              <p>{numbers[7]}, {numbers[8]} and {numbers[9]} are divided into 2 arrays</p>
+            </div>
+            <div className='flex gap-4'>
+              <div className='p-8 border-r-0 border-b-2 border-black bg-slate-300   w-20 h-20 '>
+                {numbers[7]}
+              </div>
+              <div className='flex border-b-2 border-black'>
+                <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
+                  {numbers[8]}
+                </div>
+                <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
+                  {numbers[9]}
+                </div>
+              </div>
+            </div>
+          </div>
+
 
         </div>
+
+
+
+
+
+
+
 
         <div className='flex flex-col items-center gap-3'>
 
@@ -218,66 +297,35 @@ function App() {
           </div>
 
 
-          <div className='flex gap-2'>
+          {/* <div className='flex gap-2'>
             <div className=' bg-blue-200 p-2 rounded-xl mb-4'>
               As array elements <span className='font-bold'> {numbers[0]}</span>, <span className='font-bold'> {numbers[1]}</span>, <span className='font-bold'> {numbers[2]}</span>, <span className='font-bold'> {numbers[5]}</span>, <span className='font-bold'> {numbers[6]}</span>, <span className='font-bold'> {numbers[7]}</span> are atomic therefore we can start arranging them
             </div>
-          </div>
+          </div> */}
 
         </div>
 
-
-        <DndProvider backend={HTML5Backend} >
-          <div className='flex gap-4 mb-4 items-center '>
-
-            <div className='flex flex-col gap-2 justify-end items-center'>
-              <div>
-                <div className=' w-56 bg-blue-200 rounded-xl p-2'>As <span className=' font-bold'> {numbers[0]} </span>&gt;  <span className=' font-bold'> {numbers[1]} </span>therefore they will interchange their positions </div>
+        <div className='flex gap-4 mb-4'>
+          {numbers.map(number => {
+            return (
+              <div className='p-8 border-r-0 border-b-2 border-black bg-slate-300   w-20 h-20 '>
+                {number}
               </div>
-              <div className='flex'>
-                <Container shouldAccept={numbers[1]} />
-                <Container shouldAccept={numbers[0]} />
-              </div>
-            </div>
-
-            <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-              {numbers[2]}
-            </div>
-
-            <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-              {numbers[3]}
-            </div>
-
-            <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-              {numbers[4]}
-            </div>
-
-            <div className='flex flex-col gap-2 justify-center items-center'>
-              <div>
-                <div className=' w-56 bg-blue-200 rounded-xl p-2'>As <span className=' font-bold'> {numbers[5]} </span>&gt;  <span className=' font-bold'> {numbers[6]} </span>therefore they will interchange their positions </div>
-              </div>
-              <div className='flex gap-4'>
-                <Container shouldAccept={numbers[6]} />
-                <Container shouldAccept={numbers[5]} />
-              </div>
-            </div>
-
-            <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-              {numbers[7]}
-            </div>
-
-            <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-              {numbers[8]}
-            </div>
-
-            <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-              {numbers[9]}
-            </div>
+            )
+          })}
+        </div>
 
 
-          </div>
+        <div className=' bg-blue-200 p-2 rounded-xl mb-4'>
+          We have successfully made the array atomic i.e. seperated each element out
+        </div>
 
-        </DndProvider>
+        <div className=' bg-blue-200 p-2 rounded-xl mb-4'>
+          We'll start merging the now :)
+        </div>
+
+
+
 
 
 
@@ -285,15 +333,27 @@ function App() {
         <DndProvider backend={HTML5Backend}>
 
 
-          <div className='flex justify-center gap-4'>
+          <div className='flex justify-center gap-4 '>
 
             <div className='flex flex-col gap-2 justify-center items-center'>
               <div>
                 <div className=' w-56 bg-blue-200 rounded-xl p-2'>As <span className=' font-bold'> {numbers[0]} </span>&gt;  <span className=' font-bold'> {numbers[1]} </span>therefore they will interchange their positions </div>
               </div>
               <div className='flex'>
-                <Container shouldAccept={numbers[1]} />
-                <Container shouldAccept={numbers[0]} />
+
+                <div className='flex items-center flex-col'>
+                  <Container shouldAccept={numbers[1]} />
+                  {/* {firstShow && showNumber === 1 &&
+                    <span className=' text-2xl'>&uarr;</span>
+                  } */}
+                </div>
+
+                <div className='flex items-center flex-col'>
+                  <Container shouldAccept={numbers[0]} />
+                  {/* {secondShow && showNumber === 2 &&
+                    <span className=' text-2xl'>&uarr;</span>
+                  } */}
+                </div>
               </div>
             </div>
 
@@ -302,8 +362,18 @@ function App() {
                 <div className=' w-56 bg-blue-200 rounded-xl p-2'>As <span className=' font-bold'> {numbers[2]} </span>&gt;  <span className=' font-bold'> {numbers[3]} </span>therefore they will interchange their positions </div>
               </div>
               <div className='flex'>
-                <Container shouldAccept={numbers[3]} />
-                <Container shouldAccept={numbers[2]} />
+                <div className='flex items-center flex-col'>
+                  <Container shouldAccept={numbers[3]} />
+                  {/* {firstShow && showNumber === 1 &&
+                    <span className=' text-2xl'>&uarr;</span>
+                  } */}
+                </div>
+                <div className='flex items-center flex-col'>
+                  <Container shouldAccept={numbers[2]} />
+                  {/* {secondShow && showNumber === 2 &&
+                    <span className=' text-2xl'>&uarr;</span>
+                  } */}
+                </div>
               </div>
             </div>
 
@@ -339,9 +409,39 @@ function App() {
             </div>
 
           </div>
+          {/* 
+          <div onClick={nextShow} className=' cursor-pointer bg-blue-200 rounded-full w-8 h-8 flex justify-center items-center mb-4'>
+            &rarr;
+          </div> */}
 
           <div className='flex justify-center gap-4'>
+
             <div className='flex'>
+              <Container shouldAccept={numbers[3]} />
+              <Container shouldAccept={numbers[2]} />
+              <Container shouldAccept={numbers[1]} />
+              <Container shouldAccept={numbers[0]} />
+            </div>
+
+            <div className='flex'>
+              <Container shouldAccept={numbers[7]} />
+              <Container shouldAccept={numbers[6]} />
+              <Container shouldAccept={numbers[5]} />
+              <Container shouldAccept={numbers[4]} />
+            </div>
+            <div className='flex'>
+              <Container shouldAccept={numbers[9]} />
+              <Container shouldAccept={numbers[8]} />
+            </div>
+
+          </div>
+
+          <div className='flex justify-center gap-4'>
+
+            <div className='flex'>
+              <Container shouldAccept={numbers[7]} />
+              <Container shouldAccept={numbers[6]} />
+              <Container shouldAccept={numbers[5]} />
               <Container shouldAccept={numbers[4]} />
               <Container shouldAccept={numbers[3]} />
               <Container shouldAccept={numbers[2]} />
@@ -351,15 +451,32 @@ function App() {
             <div className='flex'>
               <Container shouldAccept={numbers[9]} />
               <Container shouldAccept={numbers[8]} />
-              <Container shouldAccept={numbers[7]} />
-              <Container shouldAccept={numbers[6]} />
-              <Container shouldAccept={numbers[5]} />
             </div>
 
           </div>
 
+          <div className='flex justify-center gap-4'>
+
+
+            <Container shouldAccept={numbers[9]} />
+            <Container shouldAccept={numbers[8]} />
+            <Container shouldAccept={numbers[7]} />
+            <Container shouldAccept={numbers[6]} />
+            <Container shouldAccept={numbers[5]} />
+            <Container shouldAccept={numbers[4]} />
+            <Container shouldAccept={numbers[3]} />
+            <Container shouldAccept={numbers[2]} />
+            <Container shouldAccept={numbers[1]} />
+            <Container shouldAccept={numbers[0]} />
+
+
+          </div>
 
         </DndProvider>
+
+
+
+
 
 
       </div>
@@ -367,4 +484,4 @@ function App() {
   );
 }
 export { ItemTypes }
-export default App;
+export default App
