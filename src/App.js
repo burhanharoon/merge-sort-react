@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd'
-import { Box } from './Components/Box';
-import { Container } from './Components/Container';
+import { Box } from './Components/DraggableBox';
+import { Container } from './Components/DroppableBox';
 import infoIcon from './icons8-info.png'
 import nextIcon from './icons8-next.png'
 
@@ -13,7 +13,6 @@ function getRndInteger(min, max) {
 let numbers = []
 const randomizeNewArray = () => {
   let temp = []
-  console.log("object");
   for (let i = 0; i < 10; i++) {
     let digit = (getRndInteger(0, 100))
     temp.push(digit)
@@ -63,24 +62,6 @@ const App = () => {
   const [nextArray, setNextArray] = useState(1)
 
   const [showNextElement, setShowNextElement] = useState(0)
-
-  function shuffle(array) {
-    let currentIndex = array.length, randomIndex;
-
-    // While there remain elements to shuffle...
-    while (currentIndex != 0) {
-
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      // And swap it with the current element.
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
-    }
-
-    return array;
-  }
 
   return (
 
@@ -150,73 +131,81 @@ const App = () => {
 
         {/* Middle Layer */}
         {2 <= nextArray &&
+          <DndProvider backend={HTML5Backend}>
 
-          <div className='flex flex-col justify-center'>
-            <div className='flex  justify-center'>
-              <p className=' w-max  p-2 rounded-xl bg-blue-200 m-2'>Half = 10/2 = 5</p>
-              <p className=' w-max  p-2 rounded-xl bg-blue-200 m-2'>Therefore Array devided into 2 parts</p>
-            </div>
-            <div className='flex justify-center w-full gap-8 mb-4'>
-              <div className='flex border-b-4 border-black'>
-                {numbers.map((number, index) => {
-                  return (
-                    index < half ?
-                      <div className='p-8  bg-slate-300 border-r-2 border-white w-20 h-20 '>{number}</div> : ""
-                  )
-                })}
+            <div className='flex flex-col justify-center'>
+              <div className='flex  justify-center'>
+                <p className=' w-max  p-2 rounded-xl bg-blue-200 m-2'>Half = 10/2 = 5</p>
+                <p className=' w-max  p-2 rounded-xl bg-blue-200 m-2'>Therefore Array devided into 2 parts</p>
+                <p className=' w-max  p-2 rounded-xl bg-blue-200 m-2'>Place the numbers in their respective boxes</p>
               </div>
+              <div className='flex justify-center w-full gap-8 mb-4'>
+                <div className='flex border-b-4 border-black'>
+                  {numbers.map((number, index) => {
+                    return (
+                      index < half ?
+                        <Container shouldAccept={number} /> : ""
+                    )
+                  })}
+                </div>
 
-              <div className='flex border-b-4 border-black'>
-                {numbers.map((number, index) => {
-                  return (
-                    index >= half ?
-                      <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>{number}</div> : ""
-                  )
-                })}
+                <div className='flex border-b-4 border-black'>
+                  {numbers.map((number, index) => {
+                    return (
+                      index >= half ?
+                        <Container shouldAccept={number} /> : ""
+                    )
+                  })}
+                </div>
               </div>
             </div>
-          </div>
+
+          </DndProvider>
         }
 
 
         {/* Third Layer */}
 
         {3 <= nextArray &&
-          <div className='flex justify-center w-full gap-12 mb-4'>
-            <div className='flex border-b-4 border-black'>
-              {numbers.map((number, index) => {
-                return (
-                  index < firstHalf - 1 ?
-                    <div className='p-8  bg-slate-300 mr-1  w-20 h-20 '>{number}</div> : ""
-                )
-              })}
-            </div>
+          <DndProvider backend={HTML5Backend}>
 
-            <div className='flex border-b-4 border-black'>
-              {numbers.map((number, index) => {
-                return (
-                  index >= firstHalf - 1 && index <= half - 1 ?
-                    <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>{number}</div> : ""
-                )
-              })}
+            <div className='flex justify-center w-full gap-12 mb-4'>
+              <div className='flex border-b-4 border-black'>
+                {numbers.map((number, index) => {
+                  return (
+                    index < firstHalf - 1 ?
+                      <Container shouldAccept={number} /> : ""
+
+                  )
+                })}
+              </div>
+
+              <div className='flex border-b-4 border-black'>
+                {numbers.map((number, index) => {
+                  return (
+                    index >= firstHalf - 1 && index <= half - 1 ?
+                      <Container shouldAccept={number} /> : ""
+                  )
+                })}
+              </div>
+              <div className='flex border-b-4 border-black'>
+                {numbers.map((number, index) => {
+                  return (
+                    index > half - 1 && index <= 6 ?
+                      <Container shouldAccept={number} /> : ""
+                  )
+                })}
+              </div>
+              <div className='flex border-b-4 border-black'>
+                {numbers.map((number, index) => {
+                  return (
+                    index >= 7 ?
+                      <Container shouldAccept={number} /> : ""
+                  )
+                })}
+              </div>
             </div>
-            <div className='flex border-b-4 border-black'>
-              {numbers.map((number, index) => {
-                return (
-                  index > half - 1 && index <= 6 ?
-                    <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>*{number}</div> : ""
-                )
-              })}
-            </div>
-            <div className='flex border-b-4 border-black'>
-              {numbers.map((number, index) => {
-                return (
-                  index >= 7 ?
-                    <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>{number}</div> : ""
-                )
-              })}
-            </div>
-          </div>
+          </DndProvider>
         }
 
 
@@ -224,86 +213,71 @@ const App = () => {
         {/* Fourth Layer */}
 
         {4 <= nextArray &&
-          <div className='flex  gap-4 mb-4'>
+          <DndProvider backend={HTML5Backend}>
 
-            <div className='flex items-center  gap-2 flex-col'>
-              <div className='w-50 bg-blue-200 p-2 rounded-xl'>
-                <p>Array has 2 elements {numbers[0]} and {numbers[1]}</p>
-                <p>Half = Length/2 = 1</p>
-                <p>{numbers[0]} and {numbers[1]} are divided into 2 arrays</p>
-              </div>
-              <div className='flex gap-4'>
-                <div className='p-8 border-r-0 border-b-4 border-black bg-slate-300   w-20 h-20 '>
-                  {numbers[0]}
+            <div className='flex gap-4 mb-4'>
+
+              <div className='flex items-center  gap-2 flex-col'>
+                <div className='w-50 bg-blue-200 p-2 rounded-xl'>
+                  <p>Array has 2 elements {numbers[0]} and {numbers[1]}</p>
+                  <p>Half = Length/2 = 1</p>
+                  <p>{numbers[0]} and {numbers[1]} are divided into 2 arrays</p>
                 </div>
-                <div className='p-8 border-r-0 border-b-4 border-black bg-slate-300   w-20 h-20 '>
-                  {numbers[1]}
+                <div className='flex gap-4'>
+
+                  <Container shouldAccept={numbers[0]} />
+                  <Container shouldAccept={numbers[1]} />
+
                 </div>
               </div>
-            </div>
 
 
-            <div className='flex items-center  gap-2 flex-col'>
-              <div className='w-50 bg-blue-200 p-2 rounded-xl'>
-                <p>Array has 3 elements {numbers[2]}, {numbers[3]}and {numbers[4]}</p>
-                <p>Half = Length/2 = 1.5</p>
-                <p>{numbers[2]}, {numbers[3]} and {numbers[4]} are divided into 2 arrays</p>
-              </div>
-              <div className='flex gap-4'>
-                <div className='p-8 border-r-0 border-b-4 border-black bg-slate-300   w-20 h-20 '>
-                  {numbers[2]}
+              <div className='flex items-center  gap-2 flex-col'>
+                <div className='w-50 bg-blue-200 p-2 rounded-xl'>
+                  <p>Array has 3 elements {numbers[2]}, {numbers[3]}and {numbers[4]}</p>
+                  <p>Half = Length/2 = 1.5</p>
+                  <p>{numbers[2]}, {numbers[3]} and {numbers[4]} are divided into 2 arrays</p>
                 </div>
-                <div className='flex border-b-4 border-black'>
-                  <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-                    {numbers[3]}
-                  </div>
-                  <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-                    {numbers[4]}
+                <div className='flex gap-4'>
+                  <Container shouldAccept={numbers[2]} />
+                  <div className='flex border-b-4 border-black'>
+                    <Container shouldAccept={numbers[3]} />
+                    <Container shouldAccept={numbers[4]} />
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className='flex items-center  gap-2 flex-col'>
-              <div className='w-50 bg-blue-200 p-2 rounded-xl'>
-                <p>Array has 2 elements {numbers[5]} and {numbers[6]}</p>
-                <p>Half = Length/2 = 1</p>
-                <p>{numbers[5]} and {numbers[6]} are divided into 2 arrays</p>
-              </div>
-              <div className='flex gap-4'>
-                <div className='p-8 border-r-0 border-b-4 border-black bg-slate-300   w-20 h-20 '>
-                  {numbers[5]}
+              <div className='flex items-center  gap-2 flex-col'>
+                <div className='w-50 bg-blue-200 p-2 rounded-xl'>
+                  <p>Array has 2 elements {numbers[5]} and {numbers[6]}</p>
+                  <p>Half = Length/2 = 1</p>
+                  <p>{numbers[5]} and {numbers[6]} are divided into 2 arrays</p>
                 </div>
-                <div className='p-8 border-r-0 border-b-4 border-black bg-slate-300   w-20 h-20 '>
-                  {numbers[6]}
+                <div className='flex gap-4'>
+                  <Container shouldAccept={numbers[5]} />
+                  <Container shouldAccept={numbers[6]} />
                 </div>
               </div>
-            </div>
 
 
-            <div className='flex items-center  gap-2 flex-col'>
-              <div className='w-50 bg-blue-200 p-2 rounded-xl'>
-                <p>Array has 3 elements {numbers[7]}, {numbers[8]}and {numbers[9]}</p>
-                <p>Half = Length/2 = 1.5</p>
-                <p>{numbers[7]}, {numbers[8]} and {numbers[9]} are divided into 2 arrays</p>
-              </div>
-              <div className='flex gap-4'>
-                <div className='p-8 border-r-0 border-b-4 border-black bg-slate-300   w-20 h-20 '>
-                  {numbers[7]}
+              <div className='flex items-center  gap-2 flex-col'>
+                <div className='w-50 bg-blue-200 p-2 rounded-xl'>
+                  <p>Array has 3 elements {numbers[7]}, {numbers[8]}and {numbers[9]}</p>
+                  <p>Half = Length/2 = 1.5</p>
+                  <p>{numbers[7]}, {numbers[8]} and {numbers[9]} are divided into 2 arrays</p>
                 </div>
-                <div className='flex border-b-4 border-black'>
-                  <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-                    {numbers[8]}
-                  </div>
-                  <div className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-                    {numbers[9]}
+                <div className='flex gap-4'>
+                  <Container shouldAccept={numbers[7]} />
+                  <div className='flex border-b-4 border-black'>
+                    <Container shouldAccept={numbers[8]} />
+                    <Container shouldAccept={numbers[9]} />
                   </div>
                 </div>
               </div>
+
+
             </div>
-
-
-          </div>
+          </DndProvider>
 
         }
 
