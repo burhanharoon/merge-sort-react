@@ -29,9 +29,7 @@ const App = () => {
   const [boxes] = useState(boxDetails);
   const [droppedBoxNames] = useState([]);
 
-  function isDropped(boxName) {
-    return droppedBoxNames.indexOf(boxName) > -1;
-  }
+  const isDropped = (boxName) => droppedBoxNames.indexOf(boxName) > -1
 
   const half = numbers.length / 2
   const firstHalf = half / 2
@@ -52,19 +50,17 @@ const App = () => {
         </div>
       </DndProvider>
 
-      <img onClick={() => { setNextArray(nextArray + 1) }} src={nextIcon} className='fixed top-1/3 rotate-90 cursor-pointer left-16' />
+      <img onClick={() => { setNextArray(nextArray + 1) }} src={nextIcon} alt='Next Array' className='fixed top-1/3 rotate-90 cursor-pointer left-16' />
 
-      {
-        nextArray >= 7 &&
-        <div className=' '>
+      {nextArray >= 7 &&
+        <div>
           {showNextElement > 1 &&
-            <img className='cursor-pointer fixed bottom-40 rotate-180 left-8' onClick={() => { setShowNextElement(showNextElement - 1) }} src={nextIcon} />
+            <img className='cursor-pointer fixed bottom-40 rotate-180 left-8' alt='Previous Step' onClick={() => { setShowNextElement(showNextElement - 1) }} src={nextIcon} />
           }
           {showNextElement <= 10 &&
-            <img className='fixed bottom-40 cursor-pointer left-24' onClick={() => { setShowNextElement(showNextElement + 1) }} src={nextIcon} />
+            <img className='fixed bottom-40 cursor-pointer left-24' alt='Next Step' onClick={() => { setShowNextElement(showNextElement + 1) }} src={nextIcon} />
           }
-        </div>
-      }
+        </div>}
 
       <div className='w-full mb-80 flex items-center flex-col'>
         <a href="/about">
@@ -81,14 +77,11 @@ const App = () => {
         {/* Displaying Initial Array */}
         <div className='flex border-black border-b-4 justify-center mb-4'>
           {
-            numbers.map(number => {
-              return (
-                <div key={number} className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
-                  {number}
-                </div>
-              )
-            })
-          }
+            numbers.map(number =>
+              <div key={number} className='p-8 bg-slate-300 border-r-2 border-white w-20 h-20 '>
+                {number}
+              </div>
+            )}
         </div>
 
 
@@ -104,21 +97,11 @@ const App = () => {
               </div>
               <div className='flex justify-center w-full gap-8 mb-4'>
                 <div className='flex border-b-4 border-black'>
-                  {numbers.map((number, index) => {
-                    return (
-                      index < half ?
-                        <Container shouldAccept={number} /> : ""
-                    )
-                  })}
+                  {numbers.map((number, index) => index < half && <Container key={index} shouldAccept={number} />)}
                 </div>
 
                 <div className='flex border-b-4 border-black'>
-                  {numbers.map((number, index) => {
-                    return (
-                      index >= half ?
-                        <Container shouldAccept={number} /> : ""
-                    )
-                  })}
+                  {numbers.map((number, index) => index >= half && <Container key={index} shouldAccept={number} />)}
                 </div>
               </div>
             </div>
@@ -134,38 +117,18 @@ const App = () => {
 
             <div className='flex justify-center w-full gap-12 mb-4'>
               <div className='flex border-b-4 border-black'>
-                {numbers.map((number, index) => {
-                  return (
-                    index < firstHalf - 1 ?
-                      <Container shouldAccept={number} /> : ""
-
-                  )
-                })}
+                {numbers.map((number, index) => index < firstHalf - 1 && <Container key={index} shouldAccept={number} />)}
               </div>
 
               <div className='flex border-b-4 border-black'>
-                {numbers.map((number, index) => {
-                  return (
-                    index >= firstHalf - 1 && index <= half - 1 ?
-                      <Container shouldAccept={number} /> : ""
-                  )
-                })}
+                {numbers.map((number, index) => index >= firstHalf - 1 && index <= half - 1 && <Container shouldAccept={number} />)}
+              </div>
+
+              <div className='flex border-b-4 border-black'>
+                {numbers.map((number, index) => index > half - 1 && index <= 6 && <Container shouldAccept={number} />)}
               </div>
               <div className='flex border-b-4 border-black'>
-                {numbers.map((number, index) => {
-                  return (
-                    index > half - 1 && index <= 6 ?
-                      <Container shouldAccept={number} /> : ""
-                  )
-                })}
-              </div>
-              <div className='flex border-b-4 border-black'>
-                {numbers.map((number, index) => {
-                  return (
-                    index >= 7 ?
-                      <Container shouldAccept={number} /> : ""
-                  )
-                })}
+                {numbers.map((number, index) => index >= 7 && <Container shouldAccept={number} />)}
               </div>
             </div>
           </DndProvider>
@@ -291,12 +254,12 @@ const App = () => {
 
                   <div className='flex items-center flex-col'>
                     <Container shouldAccept={numbers[1]} />
-                    <span className={showNextElement == 1 || showNextElement == 2 || showNextElement == 3 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                    <span className={showNextElement === 1 || showNextElement === 2 || showNextElement === 3 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                   </div>
 
                   <div className='flex items-center flex-col'>
                     <Container shouldAccept={numbers[0]} />
-                    <span className={showNextElement == 3 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                    <span className={showNextElement === 3 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                   </div>
                 </div>
               </div>
@@ -308,11 +271,11 @@ const App = () => {
                 <div className='flex'>
                   <div className='flex items-center flex-col'>
                     <Container shouldAccept={numbers[3]} />
-                    <span className={showNextElement == 1 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                    <span className={showNextElement === 1 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                   </div>
                   <div className='flex items-center flex-col'>
                     <Container shouldAccept={numbers[2]} />
-                    <span className={showNextElement == 2 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                    <span className={showNextElement === 2 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                   </div>
                 </div>
               </div>
@@ -324,11 +287,11 @@ const App = () => {
                 <div className='flex'>
                   <div className='flex items-center flex-col'>
                     <Container shouldAccept={numbers[5]} />
-                    <span className={showNextElement == 4 || showNextElement == 5 || showNextElement == 6 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                    <span className={showNextElement === 4 || showNextElement === 5 || showNextElement === 6 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                   </div>
                   <div className='flex items-center flex-col'>
                     <Container shouldAccept={numbers[4]} />
-                    <span className={showNextElement == 6 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                    <span className={showNextElement === 6 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                   </div>
                 </div>
               </div>
@@ -341,11 +304,11 @@ const App = () => {
 
                   <div className='flex items-center flex-col'>
                     <Container shouldAccept={numbers[7]} />
-                    <span className={showNextElement == 4 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                    <span className={showNextElement === 4 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                   </div>
                   <div className='flex items-center flex-col'>
                     <Container shouldAccept={numbers[6]} />
-                    <span className={showNextElement == 5 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                    <span className={showNextElement === 5 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                   </div>
                 </div>
               </div>
@@ -358,11 +321,11 @@ const App = () => {
 
                   <div className='flex items-center flex-col'>
                     <Container shouldAccept={numbers[9]} />
-                    <span className={showNextElement == 7 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                    <span className={showNextElement === 7 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                   </div>
                   <div className='flex items-center flex-col'>
                     <Container shouldAccept={numbers[8]} />
-                    <span className={showNextElement == 7 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                    <span className={showNextElement === 7 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                   </div>
                 </div>
               </div>
@@ -374,17 +337,17 @@ const App = () => {
               <div className='flex flex-col '>
                 <div className='flex '>
 
-                  <div className={showNextElement == 1 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
+                  <div className={showNextElement === 1 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
                     <div>As i {'>'} j  </div>
                     <div>Place {numbers[3]} below</div>
                     <div>j=j+1</div>
                   </div>
-                  <div className={showNextElement == 2 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
+                  <div className={showNextElement === 2 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
                     <div>As i {'>'} j  </div>
                     <div>Place {numbers[2]} below</div>
                     <div>j=j+1</div>
                   </div>
-                  <div className={showNextElement == 3 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
+                  <div className={showNextElement === 3 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
                     <div>As j is out of bound now  </div>
                     <div>Place all remaining elements below</div>
                   </div>
@@ -400,17 +363,17 @@ const App = () => {
               <div className='flex flex-col '>
                 <div className='flex'>
 
-                  <div className={showNextElement == 4 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
+                  <div className={showNextElement === 4 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
                     <div>As i {'>'} j  </div>
                     <div>Place {numbers[7]} below</div>
                     <div>j=j+1</div>
                   </div>
-                  <div className={showNextElement == 5 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
+                  <div className={showNextElement === 5 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
                     <div>As i {'>'} j  </div>
                     <div>Place {numbers[6]} below</div>
                     <div>j=j+1</div>
                   </div>
-                  <div className={showNextElement == 6 ? 'flex  flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
+                  <div className={showNextElement === 6 ? 'flex  flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
                     <div>As j is out of bound now  </div>
                     <div>Place all remaining elements below</div>
                   </div>
@@ -425,7 +388,7 @@ const App = () => {
 
               <div className='flex flex-col '>
                 <div className='flex'>
-                  <div className={showNextElement == 7 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
+                  <div className={showNextElement === 7 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
                     <div>No need to change</div>
                     <div>As thery are already sorted</div>
                     <div>Place them below</div>
@@ -444,46 +407,46 @@ const App = () => {
               <div className='flex'>
                 <div className='flex items-center flex-col'>
                   <Container shouldAccept={numbers[7]} />
-                  <span className={showNextElement == 8 || showNextElement == 9 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                  <span className={showNextElement === 8 || showNextElement === 9 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                 </div>
                 <div className='flex items-center flex-col'>
                   <Container shouldAccept={numbers[6]} />
-                  <span className={showNextElement == 10 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                  <span className={showNextElement === 10 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                 </div>
                 <div className='flex items-center flex-col'>
                   <Container shouldAccept={numbers[5]} />
-                  <span className={showNextElement == 10 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                  <span className={showNextElement === 10 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                 </div>
                 <div className='flex items-center flex-col'>
                   <Container shouldAccept={numbers[4]} />
-                  <span className={showNextElement == 10 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                  <span className={showNextElement === 10 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                 </div>
                 <div className='flex items-center flex-col'>
                   <Container shouldAccept={numbers[3]} />
-                  <span className={showNextElement == 10 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                  <span className={showNextElement === 10 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                 </div>
                 <div className='flex items-center flex-col'>
                   <Container shouldAccept={numbers[2]} />
-                  <span className={showNextElement == 10 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                  <span className={showNextElement === 10 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                 </div>
                 <div className='flex items-center flex-col'>
                   <Container shouldAccept={numbers[1]} />
-                  <span className={showNextElement == 10 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                  <span className={showNextElement === 10 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                 </div>
                 <div className='flex items-center flex-col'>
                   <Container shouldAccept={numbers[0]} />
-                  <span className={showNextElement == 10 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                  <span className={showNextElement === 10 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                 </div>
               </div>
 
               <div className='flex'>
                 <div className='flex items-center flex-col'>
                   <Container shouldAccept={numbers[9]} />
-                  <span className={showNextElement == 8 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                  <span className={showNextElement === 8 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                 </div>
                 <div className='flex items-center flex-col'>
                   <Container shouldAccept={numbers[8]} />
-                  <span className={showNextElement == 9 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
+                  <span className={showNextElement === 9 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                 </div>
               </div>
             </div>
@@ -493,17 +456,17 @@ const App = () => {
             <div className='flex justify-center flex-col mb-12 gap-4'>
 
               <div className='flex'>
-                <div className={showNextElement == 8 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
+                <div className={showNextElement === 8 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
                   <div>As i {'>'} j  </div>
                   <div>Place {numbers[9]} below</div>
                   <div>j=j+1</div>
                 </div>
-                <div className={showNextElement == 9 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
+                <div className={showNextElement === 9 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
                   <div>As i {'>'} j  </div>
                   <div>Place {numbers[8]} below</div>
                   <div>j=j+1</div>
                 </div>
-                <div className={showNextElement == 10 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
+                <div className={showNextElement === 10 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
                   <div>As j is out of bound now</div>
                   <div>Place all remaining elements below</div>
                 </div>
