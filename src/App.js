@@ -2,55 +2,32 @@ import { useState } from 'react';
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DndProvider } from 'react-dnd'
 import { Box } from './Components/DraggableBox';
-import { Container } from './Components/DroppableBox';
+import { Container } from './Components/Container';
 import infoIcon from './icons8-info.png'
 import nextIcon from './icons8-next.png'
+import randomizeNewArray from './Components/GenerateNumbers';
+import { ItemTypes } from './Components/ItemTypes';
 
-function getRndInteger(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
-}
-
-let numbers = []
-const randomizeNewArray = () => {
-  let temp = []
-  for (let i = 0; i < 10; i++) {
-    let digit = (getRndInteger(0, 100))
-    temp.push(digit)
-  }
-
-  function sort(temp) {
-    temp.sort(function (a, b) {
-      return b - a;
-    })
-  }
-
-  sort(temp)
-  return temp
-}
-
-numbers = randomizeNewArray()
-
-let ItemTypes = {}
-numbers.forEach(number => {
-  ItemTypes[`Item${number}`] = number;
-})
-
+const numbers = randomizeNewArray()
 
 const App = () => {
 
-  const [boxes] = useState([
-    { name: `${numbers[5]}`, type: ItemTypes[`Item${numbers[5]}`] },
-    { name: `${numbers[0]}`, type: ItemTypes[`Item${numbers[0]}`] },
-    { name: `${numbers[2]}`, type: ItemTypes[`Item${numbers[2]}`] },
-    { name: `${numbers[9]}`, type: ItemTypes[`Item${numbers[9]}`] },
-    { name: `${numbers[1]}`, type: ItemTypes[`Item${numbers[1]}`] },
-    { name: `${numbers[8]}`, type: ItemTypes[`Item${numbers[8]}`] },
-    { name: `${numbers[3]}`, type: ItemTypes[`Item${numbers[3]}`] },
-    { name: `${numbers[6]}`, type: ItemTypes[`Item${numbers[6]}`] },
-    { name: `${numbers[7]}`, type: ItemTypes[`Item${numbers[7]}`] },
-    { name: `${numbers[4]}`, type: ItemTypes[`Item${numbers[4]}`] },
-  ]);
-  const [droppedBoxNames, setDroppedBoxNames] = useState([]);
+  const boxDetails =
+    [
+      { name: `${numbers[5]}`, type: ItemTypes.BOX },
+      { name: `${numbers[0]}`, type: ItemTypes.BOX },
+      { name: `${numbers[2]}`, type: ItemTypes.BOX },
+      { name: `${numbers[9]}`, type: ItemTypes.BOX },
+      { name: `${numbers[1]}`, type: ItemTypes.BOX },
+      { name: `${numbers[8]}`, type: ItemTypes.BOX },
+      { name: `${numbers[3]}`, type: ItemTypes.BOX },
+      { name: `${numbers[6]}`, type: ItemTypes.BOX },
+      { name: `${numbers[7]}`, type: ItemTypes.BOX },
+      { name: `${numbers[4]}`, type: ItemTypes.BOX },
+    ]
+
+  const [boxes] = useState(boxDetails);
+  const [droppedBoxNames] = useState([]);
 
   function isDropped(boxName) {
     return droppedBoxNames.indexOf(boxName) > -1;
@@ -67,43 +44,29 @@ const App = () => {
 
     <div>
 
-      <div className='fixed right-0 top-40 '>
-        <DndProvider backend={HTML5Backend}>
-          <div className='flex flex-col gap-1 justify-center'>
-            {boxes.reverse().map(({ name, type }, index) => (
-              index >= 5 &&
-              <Box name={name} type={type} isDropped={isDropped(name)} key={index} />))
-            }
-          </div>
-        </DndProvider>
-      </div>
+      <DndProvider backend={HTML5Backend}>
+        <div className='fixed bottom-0 bg-black py-6  left-0 right-0 flex gap-1 justify-center'>
+          {boxes.map(({ name, type }, index) => (
+            <Box name={name} type={type} isDropped={isDropped(name)} key={index} />))
+          }
+        </div>
+      </DndProvider>
 
-      <div className='fixed left-0 top-40'>
-        <DndProvider backend={HTML5Backend}>
-          <div className='flex flex-col gap-1 justify-center'>
-            {boxes.map(({ name, type }, index) => (
-              index < 5 &&
-              <Box name={name} type={type} isDropped={isDropped(name)} key={index} />))
-            }
-          </div>
-        </DndProvider>
-      </div>
-
-      <img onClick={() => { setNextArray(nextArray + 1) }} src={nextIcon} className='fixed top-72 rotate-90 cursor-pointer left-36' />
+      <img onClick={() => { setNextArray(nextArray + 1) }} src={nextIcon} className='fixed top-1/3 rotate-90 cursor-pointer left-16' />
 
       {
         nextArray >= 7 &&
         <div className=' '>
           {showNextElement > 1 &&
-            <img className='cursor-pointer fixed bottom-12 rotate-180 left-8' onClick={() => { setShowNextElement(showNextElement - 1) }} src={nextIcon} />
+            <img className='cursor-pointer fixed bottom-40 rotate-180 left-8' onClick={() => { setShowNextElement(showNextElement - 1) }} src={nextIcon} />
           }
           {showNextElement <= 10 &&
-            <img className='fixed bottom-12 cursor-pointer left-24' onClick={() => { setShowNextElement(showNextElement + 1) }} src={nextIcon} />
+            <img className='fixed bottom-40 cursor-pointer left-24' onClick={() => { setShowNextElement(showNextElement + 1) }} src={nextIcon} />
           }
         </div>
       }
 
-      <div className='w-full flex items-center flex-col'>
+      <div className='w-full mb-80 flex items-center flex-col'>
         <a href="/about">
           <div className=' p-4 rounded-xl mt-2 bg-cyan-600 text-white'>
             Generate New Random Array
@@ -111,7 +74,7 @@ const App = () => {
         </a>
 
         <p className=' w-max text-white p-2 rounded-xl bg-slate-500 m-2'>Read this first:</p>
-        <p className='w-max flex items-center bg-blue-200 rounded-xl p-2 m-2'> <img src={infoIcon} width='30px' height='10px' alt="" /> You can drag and drop elements from left and right side to boxes</p>
+        <p className='w-max flex items-center bg-blue-200 rounded-xl p-2 m-2'> <img src={infoIcon} width='30px' height='10px' alt="" /> You can drag elements from bottom black box of the screen</p>
         <p className=' w-max  p-2 rounded-xl bg-blue-200 m-2'>Initial Array:</p>
         <p className=' w-max  p-2 rounded-xl bg-blue-200 m-2'>Total elements = 10</p>
 
@@ -208,8 +171,6 @@ const App = () => {
           </DndProvider>
         }
 
-
-
         {/* Fourth Layer */}
 
         {4 <= nextArray &&
@@ -230,7 +191,6 @@ const App = () => {
 
                 </div>
               </div>
-
 
               <div className='flex items-center  gap-2 flex-col'>
                 <div className='w-50 bg-blue-200 p-2 rounded-xl'>
@@ -259,7 +219,6 @@ const App = () => {
                 </div>
               </div>
 
-
               <div className='flex items-center  gap-2 flex-col'>
                 <div className='w-50 bg-blue-200 p-2 rounded-xl'>
                   <p>Array has 3 elements {numbers[7]}, {numbers[8]}and {numbers[9]}</p>
@@ -274,13 +233,9 @@ const App = () => {
                   </div>
                 </div>
               </div>
-
-
             </div>
           </DndProvider>
-
         }
-
 
         {4 <= nextArray &&
 
@@ -295,9 +250,9 @@ const App = () => {
                 Array consisting of elements <span className='font-bold'> {numbers[8]}</span> and<span className='font-bold'> {numbers[9]}</span> will be further divided
               </div>
             </div>
-
           </div>
         }
+
         {5 <= nextArray &&
           <div className='flex gap-4 mb-4'>
             {numbers.map(number => {
@@ -309,7 +264,6 @@ const App = () => {
             })}
           </div>
         }
-
 
         {6 <= nextArray &&
           <div className='flex justify-center items-center flex-col'>
@@ -363,8 +317,6 @@ const App = () => {
                 </div>
               </div>
 
-
-
               <div className='flex flex-col gap-2 justify-center items-center'>
                 <div>
                   <div className=' w-56 bg-blue-200 rounded-xl p-2'>As <span className=' font-bold'> {numbers[4]} </span>&gt;  <span className=' font-bold'> {numbers[5]} </span>therefore they will interchange their positions </div>
@@ -380,8 +332,6 @@ const App = () => {
                   </div>
                 </div>
               </div>
-
-
 
               <div className='flex flex-col gap-2 justify-center items-center'>
                 <div>
@@ -400,7 +350,6 @@ const App = () => {
                 </div>
               </div>
 
-
               <div className='flex flex-col gap-2 justify-center items-center'>
                 <div>
                   <div className=' w-56 bg-blue-200 rounded-xl p-2'>As <span className=' font-bold'> {numbers[8]} </span>&gt;  <span className=' font-bold'> {numbers[9]} </span>therefore they will interchange their positions </div>
@@ -417,7 +366,6 @@ const App = () => {
                   </div>
                 </div>
               </div>
-
             </div>
           }
 
@@ -449,7 +397,6 @@ const App = () => {
                 </div>
               </div>
 
-
               <div className='flex flex-col '>
                 <div className='flex'>
 
@@ -476,30 +423,24 @@ const App = () => {
                 </div>
               </div>
 
-
               <div className='flex flex-col '>
                 <div className='flex'>
-
                   <div className={showNextElement == 7 ? 'flex flex-col p-2 bg-blue-200 rounded-2xl opacity-100' : 'flex flex-col opacity-0'}>
                     <div>No need to change</div>
                     <div>As thery are already sorted</div>
                     <div>Place them below</div>
                   </div>
-
                 </div>
                 <div className='flex mt-2'>
                   <Container shouldAccept={numbers[9]} />
                   <Container shouldAccept={numbers[8]} />
                 </div>
               </div>
-
-
             </div>
           }
 
           {8 <= nextArray &&
             <div className='flex justify-center gap-4'>
-
               <div className='flex'>
                 <div className='flex items-center flex-col'>
                   <Container shouldAccept={numbers[7]} />
@@ -545,7 +486,6 @@ const App = () => {
                   <span className={showNextElement == 9 ? ' text-2xl opacity-100' : ' text-2xl opacity-0'}>&uarr;</span>
                 </div>
               </div>
-
             </div>
           }
 
@@ -568,7 +508,6 @@ const App = () => {
                   <div>Place all remaining elements below</div>
                 </div>
               </div>
-
               <div className='flex '>
                 <Container shouldAccept={numbers[9]} />
                 <Container shouldAccept={numbers[8]} />
@@ -585,7 +524,6 @@ const App = () => {
             </div>
           }
         </DndProvider>
-
       </div>
     </div>
   );
